@@ -1,14 +1,15 @@
 import json
 import zmq
+import zmq.ssh
 
 class JHost():
     def __init__(self):
         self.context = zmq.Context()
         self.assigned_tasks_socket = self.context.socket(zmq.PUSH)
-        self.assigned_tasks_socket.bind("tcp://*:6001")
+        zmq.ssh.tunnel_connection(self.assigned_tasks_socket, "tcp://orinaiss.ucsd.edu:6001", "nvidia@orinaiss.ucsd.edu")
 
         self.finished_tasks_socket = self.context.socket(zmq.PULL)
-        self.finished_tasks_socket.bind("tcp://*:6002")
+        zmq.ssh.tunnel_connection(self.finished_tasks_socket, "tcp://orinaiss.ucsd.edu:6002", "nvidia@orinaiss.ucsd.edu")
 
         self.results = {}
 
