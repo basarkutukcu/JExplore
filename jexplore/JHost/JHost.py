@@ -13,7 +13,11 @@ class JHost():
 
         self.results = {}
 
-    def push_single_test(self, test_data:tuple):
+    def push_single_test(self, test_data:dict):
+
+        '''Send a dict where
+            test_data['config'] is config list
+            And additional SW params as keys'''
         
         serialized_test_data = json.dumps(test_data)
         self.assigned_tasks_socket.send_string(serialized_test_data)

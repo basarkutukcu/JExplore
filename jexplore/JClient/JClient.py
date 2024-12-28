@@ -1,5 +1,6 @@
 import json
 import zmq
+from JConfig import JConfig
 
 class JClient():
     def __init__(self):
@@ -9,6 +10,9 @@ class JClient():
 
         self.send_tasks_socket = self.context.socket(zmq.PUSH)
         self.send_tasks_socket.bind("tcp://*:6002")
+
+        self.jc = JConfig('Orin')
+        self.jc.read_config()
 
     def get_test(self):
         serialized_test_data = self.get_tasks_socket.recv_string()
@@ -26,3 +30,13 @@ class JClient():
         processed_data['metric1'] = 1
         processed_data['metric2'] = 2
         return processed_data
+        
+    def set_JConf(self, conf):
+        conf = tuple(conf)
+        print(f"Setting conf {conf}")
+        self.jc.set_confs(conf)
+
+    def set_max_config(self):
+        print(f"Setting max")
+        conf = (-1, -1, -1, -1, -1, -1, -1, -1)
+        self.jc.set_confs(conf)

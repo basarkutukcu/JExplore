@@ -71,15 +71,7 @@ class JConfig():
         cmd = f'echo {freq_list[freq_no]} > {emc_rate}'
         _ = subprocess.Popen(cmd, shell=True).wait()
 
-    def jetson_clocks(self):
-        _ = subprocess.Popen('jetson_clocks', shell=True).wait()
-
-if __name__ == "__main__":
-
-    jc = JConfig('Orin')
-    jc.read_config()
-
-    def expand_core_num(core_num):
+    def expand_core_num(self, core_num):
         exp_core = []
         for i in range(4):
             if i < core_num:
@@ -89,7 +81,10 @@ if __name__ == "__main__":
 
         return exp_core
 
-    def set_confs(confs):
+    def jetson_clocks(self):
+        _ = subprocess.Popen('jetson_clocks', shell=True).wait()
+
+    def set_confs(self, confs):
         # Warning: It can give a harmless IO error when try to assign freq to offline CPU cores
         c0 = confs[0]
         c1 = confs[1]
@@ -100,22 +95,27 @@ if __name__ == "__main__":
         gf = confs[6]
         ef = confs[7]
 
-        expanded_c0 = expand_core_num(c0)
-        expanded_c1 = expand_core_num(c1)
-        expanded_c2 = expand_core_num(c2)
+        expanded_c0 = self.expand_core_num(c0)
+        expanded_c1 = self.expand_core_num(c1)
+        expanded_c2 = self.expand_core_num(c2)
         total_cores = expanded_c0 + expanded_c1 + expanded_c2
         print(total_cores)
         for i,onl in enumerate(total_cores):
-            jc.state_cpu(i, onl)
+            self.state_cpu(i, onl)
 
-        jc.freq_cpu_gpu('cpu', f0, 0)
-        jc.freq_cpu_gpu('cpu', f1, 1)
-        jc.freq_cpu_gpu('cpu', f2, 2)
+        self.freq_cpu_gpu('cpu', f0, 0)
+        self.freq_cpu_gpu('cpu', f1, 1)
+        self.freq_cpu_gpu('cpu', f2, 2)
 
-        jc.freq_cpu_gpu('gpu', gf)
+        self.freq_cpu_gpu('gpu', gf)
 
-        jc.freq_emc(ef)
+        self.freq_emc(ef)
+
+if __name__ == "__main__":
+
+    jc = JConfig('Orin')
+    jc.read_config()
 
     confs = (2, 2, -1, 10, 5, -1, 3, 0)
-    set_confs(confs)
+    jc.set_confs(confs)
 
