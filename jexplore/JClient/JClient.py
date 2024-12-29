@@ -1,6 +1,6 @@
 import json
 import zmq
-from JConfig import JConfig
+from JClient.JConfig import JConfig
 
 class JClient():
     def __init__(self):

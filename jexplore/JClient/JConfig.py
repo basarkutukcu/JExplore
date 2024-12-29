@@ -1,11 +1,7 @@
 import configparser
 import subprocess
-import sys
-sys.path.insert(0,'./')
-#[40800000, 68000000, 102000000, 
-                    # 204000000, 408000000, 665600000, 
-                    # 800000000, 1062400000, 1331200000, 
-                    # 1600000000, 1866000000]
+import sys, os
+
 freq_dict = {'emc': [204000000, 665600000,
                     2133000000, 3200000000],
             'cpu': [115200, 192000, 268800, 345600, 422400, 
@@ -22,10 +18,11 @@ class JConfig():
     def __init__(self, j_type):
         self.j_type = j_type
         self.config_dict = None
+        subprocess.call(['sudo', 'echo', 'root access granted!'])
 
     def read_config(self):
         cp = configparser.ConfigParser()
-        cp.read('jconfig.cfg')
+        cp.read(os.path.dirname(os.path.abspath(__file__)) + '/jconfig.cfg')
         self.config_dict = dict(cp.items(self.j_type))
 
     def state_cpu(self, core_num, state):
@@ -35,7 +32,7 @@ class JConfig():
         """
         name = f'cpu_core_{core_num}_on_addr'
         addr = self.config_dict[name]
-        cmd = f'echo {state} > {addr}'
+        cmd = f'sudo bash -c "echo {state} > {addr}"'
         _ = subprocess.Popen(cmd, shell=True).wait()
 
 
@@ -45,16 +42,17 @@ class JConfig():
         freq_list = freq_dict[htype]
 
         # set scaling freqs to max in correct order
-        cmd = f'echo {freq_list[-1]} > {max_addr}'
+        # cmd = f'sudo bash -c "echo {freq_list[-1]} > {max_addr}"'
+        cmd = f'sudo bash -c "echo {freq_list[-1]} > {max_addr}"'
         _ = subprocess.Popen(cmd, shell=True).wait()
-        cmd = f'echo {freq_list[-1]} > {min_addr}'
+        cmd = f'sudo bash -c "echo {freq_list[-1]} > {min_addr}"'
         _ = subprocess.Popen(cmd, shell=True).wait()
 
 
         # set scaling freqs to desired value in correct order
-        cmd = f'echo {freq_list[freq_no]} > {min_addr}'
+        cmd = f'sudo bash -c "echo {freq_list[freq_no]} > {min_addr}"'
         _ = subprocess.Popen(cmd, shell=True).wait()
-        cmd = f'echo {freq_list[freq_no]} > {max_addr}'
+        cmd = f'sudo bash -c "echo {freq_list[freq_no]} > {max_addr}"'
         _ = subprocess.Popen(cmd, shell=True).wait()
 
     def freq_emc(self, freq_no):
@@ -64,11 +62,11 @@ class JConfig():
 
         freq_list = freq_dict['emc']
 
-        cmd = f'echo 1 > {ratelock_addr}'
+        cmd = f'sudo bash -c "echo 1 > {ratelock_addr}"'
         _ = subprocess.Popen(cmd, shell=True).wait()
-        cmd = f'echo 1 > {emc_state}'
+        cmd = f'sudo bash -c "echo 1 > {emc_state}"'
         _ = subprocess.Popen(cmd, shell=True).wait()
-        cmd = f'echo {freq_list[freq_no]} > {emc_rate}'
+        cmd = f'sudo bash -c "echo {freq_list[freq_no]} > {emc_rate}"'
         _ = subprocess.Popen(cmd, shell=True).wait()
 
     def expand_core_num(self, core_num):
