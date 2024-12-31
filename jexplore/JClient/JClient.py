@@ -1,6 +1,9 @@
 import json
 import zmq
+from jtop import jtop
 from JClient.JConfig import JConfig
+from JClient.JMeasure.JPower import JPower
+from JClient.JMeasure.JMemory import JMemory
 
 class JClient():
     def __init__(self):
@@ -13,6 +16,16 @@ class JClient():
 
         self.jc = JConfig('Orin')
         self.jc.read_config()
+
+        self.jetson = jtop()
+        self.JPower = JPower(self.jetson)
+        self.JMemory = JMemory(self.jetson)
+
+    def start_jtop(self):
+        self.jetson.start()
+    
+    def close_jtop(self):
+        self.jetson.close()
 
     def get_test(self):
         serialized_test_data = self.get_tasks_socket.recv_string()
