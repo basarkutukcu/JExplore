@@ -4,9 +4,10 @@ from jtop import jtop
 from JClient.JConfig import JConfig
 from JClient.JMeasure.JPower import JPower
 from JClient.JMeasure.JMemory import JMemory
+from JClient.JMeasure.JTime import JTime
 
 class JClient():
-    def __init__(self):
+    def __init__(self, meas_enable:dict):
         self.context = zmq.Context()
         self.get_tasks_socket = self.context.socket(zmq.PULL)
         self.get_tasks_socket.bind("tcp://*:6001")
@@ -17,9 +18,39 @@ class JClient():
         self.jc = JConfig('Orin')
         self.jc.read_config()
 
+        self.meas_enable = meas_enable
+
         self.jetson = jtop()
-        self.JPower = JPower(self.jetson)
-        self.JMemory = JMemory(self.jetson)
+        if self.meas_enable['power']:
+            self.JPower = JPower(self.jetson)
+            print(f"Power measurement enabled")
+        if self.meas_enable['memory']:
+            self.JMemory = JMemory(self.jetson)
+            print(f"Memory measurement enabled")
+        if self.meas_enable['time']:
+            self.JTime = JTime()
+            print(f"Time measurement enabled")
+
+    def clean_and_start_measurements(self):
+        if self.meas_enable['power']:
+            self.JPower.clean_measure_list()
+        if self.meas_enable['memory']:
+            self.JMemory.clean_measure_list()
+        if self.meas_enable['time']:
+            self.JTime.clean_and_start_measure()
+
+    def end_measurements(self):
+        meas_results = {}
+        if self.meas_enable['power']:
+            meas_results['power'] = self.JPower.get_avg_measure()
+        if self.meas_enable['memory']:
+            meas_results['memory'] = self.JMemory.get_avg_measure()
+        if self.meas_enable['time']:
+            self.JTime.end_measure()
+            meas_results['time'] = self.JTime.get_measure()
+        
+        return meas_results
+
 
     def start_jtop(self):
         self.jetson.start()
