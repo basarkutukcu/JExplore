@@ -5,12 +5,11 @@ class JMeasure(ABC):
     def __init__(self, jetson):
         self.measure_list = []
         self.jetson = jetson
-        self.jetson.attach(self.read_measure)
+        self.read_measure = None
     
     @abstractmethod
-    def read_measure(self):
+    def read_measure_wrapper(self):
         pass
-        # self.measure_list.append(self.jetson.measure['tot']['measure'])
     
     def clean_measure_list(self):
         self.measure_list = []

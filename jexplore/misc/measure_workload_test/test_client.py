@@ -2,7 +2,9 @@ from JClient.JClient import JClient
 import time
 from example_worklaods.test_workload import test_workload
 
-jclient = JClient()
+meas_enable = {'power': True, 'memory': True, 'time': True}
+
+jclient = JClient(meas_enable)
 
 jclient.start_jtop()
 

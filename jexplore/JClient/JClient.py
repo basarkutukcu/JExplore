@@ -23,9 +23,11 @@ class JClient():
         self.jetson = jtop()
         if self.meas_enable['power']:
             self.JPower = JPower(self.jetson)
+            self.JPower.read_measure_wrapper()
             print(f"Power measurement enabled")
         if self.meas_enable['memory']:
             self.JMemory = JMemory(self.jetson)
+            self.JMemory.read_measure_wrapper()
             print(f"Memory measurement enabled")
         if self.meas_enable['time']:
             self.JTime = JTime()
