@@ -15,8 +15,12 @@ test_configs = [{'config': (2, 2, 1, 10, 5, 3, 3, 0), 'sw_param1': 1},
 
 for test_dict in test_configs:
     jhost.push_single_test(test_dict, client_name='Orin1')
-    print(f"Pushed test {test_dict}")
+    print(f"Pushed test {test_dict} to Orin1")
+    jhost.push_single_test(test_dict, client_name='Orin2')
+    print(f"Pushed test {test_dict} to Orin2")
     results = jhost.pull_test(client_name='Orin1')
-    print(f"Received results {results}")
+    print(f"Received results {results} from Orin1")
+    results = jhost.pull_test(client_name='Orin2')
+    print(f"Received results {results} from Orin2")
 
 jhost.save_results_to_csv('test_results.csv')
