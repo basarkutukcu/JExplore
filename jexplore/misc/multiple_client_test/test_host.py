@@ -1,7 +1,8 @@
 from JHost.JHost import JHost
 import time
 
-client_list = {'Orin1': ('nvidia', 'orinaiss.ucsd.edu', 6001, 6002)}
+client_list = {'Orin1': ('nvidia', 'orinaiss.ucsd.edu', 6001, 6002),
+               'Orin2': ('nvidia', 'xavieraiss.ucsd.edu', 6003, 6004)}
 
 jhost = JHost(client_list=client_list)
 
