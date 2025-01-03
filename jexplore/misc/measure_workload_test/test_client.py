@@ -4,7 +4,7 @@ from example_worklaods.test_workload import test_workload
 
 meas_enable = {'power': True, 'memory': True, 'time': True}
 
-jclient = JClient(meas_enable)
+jclient = JClient(device_name='Orin1', meas_enable=meas_enable)
 
 jclient.start_jtop()
 

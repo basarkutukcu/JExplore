@@ -1,7 +1,9 @@
 from JHost.JHost import JHost
 import time
 
-jhost = JHost()
+client_list = {'Orin1': ('nvidia', 'orinaiss.ucsd.edu', 6001, 6002)}
+
+jhost = JHost(client_list=client_list)
 
 test_configs = [{'config': (2, 2, 1, 10, 5, 3, 3, 0), 'sw_param1': 1},
                 {'config': (4, 4, 1, 8, 5, 3, 3, 2), 'sw_param1': 2},
@@ -15,3 +17,5 @@ for test_dict in test_configs:
     print(f"Pushed test {test_dict}")
     results = jhost.pull_test()
     print(f"Received results {results}")
+
+jhost.save_results_to_csv('test_results.csv')

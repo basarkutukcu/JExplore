@@ -7,15 +7,18 @@ from JClient.JMeasure.JMemory import JMemory
 from JClient.JMeasure.JTime import JTime
 
 class JClient():
-    def __init__(self, meas_enable:dict):
+    def __init__(self, device_name:str, meas_enable:dict, device_type='Orin', pull_port=6001, push_port=6002):
+        self.device_name = device_name
+        self.device_type = device_type
+
         self.context = zmq.Context()
         self.get_tasks_socket = self.context.socket(zmq.PULL)
-        self.get_tasks_socket.bind("tcp://*:6001")
+        self.get_tasks_socket.bind(f"tcp://*:{pull_port}")
 
         self.send_tasks_socket = self.context.socket(zmq.PUSH)
-        self.send_tasks_socket.bind("tcp://*:6002")
+        self.send_tasks_socket.bind(f"tcp://*:{push_port}")
 
-        self.jc = JConfig('Orin')
+        self.jc = JConfig(device_type)
         self.jc.read_config()
 
         self.meas_enable = meas_enable
@@ -66,6 +69,8 @@ class JClient():
         return test_data
     
     def send_results(self, results):
+        results['device_name'] = self.device_name
+        results['device_type'] = self.device_type
         serialized_results = json.dumps(results)
         self.send_tasks_socket.send_string(serialized_results)
 
