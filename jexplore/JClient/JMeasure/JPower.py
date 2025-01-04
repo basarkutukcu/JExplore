@@ -3,7 +3,7 @@ from JClient.JMeasure.JMeasure import JMeasure
 
 class JPower(JMeasure):
     
-    def read_measure_wrapper(self):
+    def attach_measure_function(self):
         def read_measure(jetson):
             self.measure_list.append(jetson.power['tot']['power'])
         

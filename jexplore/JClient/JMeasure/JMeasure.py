@@ -8,7 +8,7 @@ class JMeasure(ABC):
         self.read_measure = None
     
     @abstractmethod
-    def read_measure_wrapper(self):
+    def attach_measure_function(self):
         pass
     
     def clean_measure_list(self):
