@@ -4,10 +4,10 @@ jexplore is a multi-client software/hardware design space exploration tool for N
 
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install jexplore.
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install jexplore in development mode.
 
 ```bash
-pip install jexplore
+pip install -e .
 ```
 
 ## Usage
