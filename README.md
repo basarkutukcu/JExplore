@@ -78,6 +78,20 @@ jclient.close_jtop()
 
 ## Citation
 
+You can cite this work using:
+
+```
+@misc{kutukcu2025jexploredesignspaceexploration,
+      title={JExplore: Design Space Exploration Tool for Nvidia Jetson Boards}, 
+      author={Basar Kutukcu and Sinan Xie and Sabur Baidya and Sujit Dey},
+      year={2025},
+      eprint={2502.15773},
+      archivePrefix={arXiv},
+      primaryClass={cs.AR},
+      url={https://arxiv.org/abs/2502.15773}, 
+}
+```
+
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
